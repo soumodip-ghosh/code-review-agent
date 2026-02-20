@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ai-code-optimizer-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SCALEDOWN_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: NODE_ENV
+        value: production
