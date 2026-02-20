@@ -1,14 +1,41 @@
-# AI Code Optimization Agent
+# AI Code Review and Optimization Agent
 
-A full-stack AI agent that optimizes code in real-time and automates GitHub repository file optimization.
+An intelligent full-stack web application that leverages AI to analyze, optimize, and improve code quality. This agent provides real-time code optimization suggestions and automated repository enhancements, helping developers write better code faster.
 
----
+## Features
+
+- **Real-time Code Optimization**: Analyze code snippets and receive instant optimization suggestions with scoring
+- **Repository Automation**: Automatically optimize files in GitHub repositories and create pull requests
+- **AI-Powered Analysis**: Uses Google's Gemini AI for intelligent code review and improvement recommendations
+- **Multi-Language Support**: Supports optimization for various programming languages
+- **GitHub Integration**: Seamless integration with GitHub for repository management
+- **Modern Web Interface**: Clean, responsive UI built with React and Tailwind CSS
+- **RESTful API**: Well-documented API endpoints for integration with other tools
+
+## Tech Stack
+
+### Frontend
+- **React** - Component-based UI framework
+- **Vite** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **Axios** - HTTP client for API communication
+
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework for API development
+- **Google Gemini AI** - AI model for code analysis and optimization
+- **Octokit** - GitHub API client library
+
+### Deployment
+- **Vercel** - Frontend hosting and deployment
+- **Render** - Backend hosting and deployment
+- **GitHub** - Version control and repository management
 
 ## Project Structure
 
 ```
-ai-code-optimizer/
-├── backend/                  # Node.js + Express API
+code-review-agent/
+├── backend/                  # Node.js + Express API server
 │   ├── controllers/
 │   │   └── optimizeController.js
 │   ├── routes/
@@ -20,23 +47,29 @@ ai-code-optimizer/
 │   ├── .env.example
 │   ├── render.yaml
 │   └── package.json
-└── frontend/                 # React + Vite + TailwindCSS
-    ├── src/
-    │   ├── api/
-    │   │   └── client.js
-    │   ├── components/
-    │   │   ├── Loader.jsx
-    │   │   └── ScoreRing.jsx
-    │   ├── pages/
-    │   │   ├── CodeOptimizer.jsx
-    │   │   └── RepoOptimizer.jsx
-    │   ├── App.jsx
-    │   ├── main.jsx
-    │   └── index.css
-    ├── vercel.json
-    ├── tailwind.config.js
-    ├── vite.config.js
-    └── package.json
+├── frontend/                 # React + Vite + TailwindCSS client
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── client.js
+│   │   ├── components/
+│   │   │   ├── Loader.jsx
+│   │   │   └── ScoreRing.jsx
+│   │   ├── pages/
+│   │   │   ├── CodeOptimizer.jsx
+│   │   │   └── RepoOptimizer.jsx
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── vercel.json
+│   ├── tailwind.config.js
+│   ├── vite.config.js
+│   └── package.json
+├── api/                      # Vercel serverless functions
+│   ├── optimize-code.js
+│   └── optimize-repo.js
+├── LICENSE
+├── README.md
+└── vercel.json
 ```
 
 ---
