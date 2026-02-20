@@ -1,18 +1,17 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const OpenAI = require('openai');
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 /**
- * Calls the Google Gemini API to optimize code.
+ * Calls the OpenAI API to optimize code.
  * Returns: { score, comments, optimizedCode }
  */
 async function optimizeCodeWithAI(code, language) {
-  if (!GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is not configured on the server.');
+  if (!OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not configured on the server.');
   }
 
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
   const systemPrompt = `You are a senior software engineer conducting a thorough code review. Your PRIMARY job is to produce a detailed, structured review report. Optimized code is a secondary deliverable.
 
@@ -49,38 +48,28 @@ You MUST respond ONLY with a valid JSON object in this exact format (no markdown
   "optimizedCode": <string, the improved version of the code with all issues addressed>
 }`;
 
-  const userPrompt = `Review the following ${language} code and produce a full report:\n\n${code}`;
+  const userPrompt = `Review the following ${language} code and provide a structured analysis:
 
-  const prompt = `${systemPrompt}\n\n${userPrompt}`;
+\`\`\`${language}
+${code}
+\`\`\``;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const raw = response.text();
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt }
+    ],
+    temperature: 0.1,
+  });
 
-  if (!raw) {
-    throw new Error('Empty response from Gemini API.');
-  }
-
-  // Strip potential markdown code fences
-  const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-
-  let parsed;
+  const content = response.choices[0].message.content;
   try {
-    parsed = JSON.parse(cleaned);
-  } catch (e) {
-    throw new Error('Gemini returned invalid JSON. Raw: ' + raw.substring(0, 300));
+    const result = JSON.parse(content);
+    return result;
+  } catch (err) {
+    throw new Error('Failed to parse AI response as JSON: ' + content);
   }
-
-  if (
-    typeof parsed.score !== 'number' ||
-    typeof parsed.summary !== 'string' ||
-    !Array.isArray(parsed.issues) ||
-    typeof parsed.optimizedCode !== 'string'
-  ) {
-    throw new Error('Gemini response missing required fields.');
-  }
-
-  return parsed;
 }
 
 module.exports = { optimizeCodeWithAI };
